@@ -1,5 +1,5 @@
 #generator-wake 
-[![Build Status](https://travis-ci.org/colorlight4/generator-wake.svg?branch=master)](https://travis-ci.org/colorlight4/generator-wake) [![Dependency Status](https://david-dm.org/colorlight4/generator-wake/status.svg)](https://david-dm.org/colorlight4/generator-wake#info=Dependencies)
+[![Build Status](https://travis-ci.org/colorlight4/generator-wake.svg?branch=master)](https://travis-ci.org/colorlight4/generator-wake) [![Dependency Status](https://david-dm.org/colorlight4/generator-wake/status.svg)](https://david-dm.org/colorlight4/generator-wake#info=Dependencies) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/colorlight4/generator-wake/master/LICENSE)
 
 ### Installation
 
