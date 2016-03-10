@@ -1,5 +1,4 @@
-sudo: required
-
+sudo: false
 language: node_js
 node_js:
   - v5
