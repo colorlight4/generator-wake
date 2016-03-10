@@ -1,0 +1,22 @@
+{
+  "name": "generator-wake",
+  "version": "1.0",
+  "author": "Felix Kalkuhl <felix@kalkuhl.net>",
+  "description": "scaffold out a front-end web project",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/colorlight4/generator-wake.git"
+  },
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "yeoman-generator": "^0.20.2",
+    "yosay": "^1.1.0"
+  },
+  "license": "MIT",
+}

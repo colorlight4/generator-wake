@@ -1,0 +1,17 @@
+// vendor
+@import "vendor/normalize";
+// @import "vendor/flx-grid";
+
+// partials
+@import "fonts/fonts";
+
+@import "partials/script"
+
+@import "partials/page";
+@import "partials/typo";
+
+@import "partials/header";
+@import "partials/content";
+@import "partials/footer";
+
+@import "partials/shame"; // clear asap
