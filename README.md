@@ -1,5 +1,5 @@
 #generator-wake 
-[![devDependency Status](https://david-dm.org/colorlight4/boilerplate/dev-status.svg)](https://david-dm.org/colorlight4/boilerplate#info=devDependencies)
+[![Build Status](https://travis-ci.org/colorlight4/generator-wake.svg?branch=master)](https://travis-ci.org/colorlight4/generator-wake) [![Dependency Status](https://david-dm.org/colorlight4/generator-wake/status.svg)](https://david-dm.org/colorlight4/generator-wake#info=Dependencies)
 
 ### Installation
 
