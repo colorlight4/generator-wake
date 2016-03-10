@@ -6,7 +6,7 @@
 First, install [Yeoman](http://yeoman.io) and clone this repo.
 
 ```sh
-	# link repo to npm
+	# link repo to your global node_moduels folder
 	npm link
 
 	# generate your new project
