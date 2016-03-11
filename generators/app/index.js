@@ -28,6 +28,13 @@ module.exports = yeoman.generators.Base.extend({
   // },
 
   writing: function () {
+
+    this.spawnCommand('bower', ['install git://github.com/colorlight4/flx-grid.scss.git']);
+    // this.fs.copy(
+    //   this.templatePath('src/**/*'),
+    //   this.destinationPath('src/')
+    // );
+
     this.fs.copy(
       this.templatePath('src/**/*'),
       this.destinationPath('src/')
@@ -54,7 +61,7 @@ module.exports = yeoman.generators.Base.extend({
     );
   },
 
-  install: function () {
-    this.npmInstall();
-  }
+  // install: function () {
+  //   this.npmInstall();
+  // }
 });
