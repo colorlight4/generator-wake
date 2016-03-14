@@ -3,7 +3,7 @@ var   yeoman  = require('yeoman-generator'),
       chalk   = require('chalk'),
       yosay   = require('yosay');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = require('yeoman-generator').Base.extend({
   // prompting: function () {
   //   var done = this.async();
 
@@ -52,9 +52,18 @@ module.exports = yeoman.generators.Base.extend({
       this.templatePath('.gitignore'),
       this.destinationPath('.gitignore')
     );
-  },
-
-  install: function () {
-    this.npmInstall();
+    this.fs.copyTpl(
+      this.templatePath('git://github.com/colorlight4/flx-grid.scss.git'),
+      this.destinationPath('src/scss/vendor/_flx-grid.scss')
+    );
+    // this.fs.copy(
+    //   this.templatePath('.gitignore'),
+    //   this.destinationPath('.gitignore')
+    // );
   }
+
+  // install: function () {
+  //   this.npmInstall();
+  //   // this.bowerInstall(['git://github.com/colorlight4/flx-grid.scss.git']);
+  // },
 });
