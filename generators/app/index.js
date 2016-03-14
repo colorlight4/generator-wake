@@ -3,7 +3,7 @@ var   yeoman  = require('yeoman-generator'),
       chalk   = require('chalk'),
       yosay   = require('yosay');
 
-module.exports = require('yeoman-generator').Base.extend({
+module.exports = yeoman.generators.Base.extend({
   // prompting: function () {
   //   var done = this.async();
 
@@ -28,6 +28,13 @@ module.exports = require('yeoman-generator').Base.extend({
   // },
 
   writing: function () {
+
+    this.spawnCommand('bower', ['install git://github.com/colorlight4/flx-grid.scss.git']);
+    // this.fs.copy(
+    //   this.templatePath('src/**/*'),
+    //   this.destinationPath('src/')
+    // );
+
     this.fs.copy(
       this.templatePath('src/**/*'),
       this.destinationPath('src/')
@@ -52,18 +59,9 @@ module.exports = require('yeoman-generator').Base.extend({
       this.templatePath('.gitignore'),
       this.destinationPath('.gitignore')
     );
-    this.fs.copyTpl(
-      this.templatePath('git://github.com/colorlight4/flx-grid.scss.git'),
-      this.destinationPath('src/scss/vendor/_flx-grid.scss')
-    );
-    // this.fs.copy(
-    //   this.templatePath('.gitignore'),
-    //   this.destinationPath('.gitignore')
-    // );
-  }
+  },
 
   // install: function () {
   //   this.npmInstall();
-  //   // this.bowerInstall(['git://github.com/colorlight4/flx-grid.scss.git']);
-  // },
+  // }
 });
