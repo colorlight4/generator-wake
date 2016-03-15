@@ -48,9 +48,11 @@ module.exports = generators.Base.extend({
       var prompts = [{
         name: 'name',
         message: 'Project Name',
+        default: 'name',
       }, {
         name: 'description',
         message: 'Description',
+        default: 'discription',
       }, {
         name: 'url',
         message: 'Project Website',
@@ -59,11 +61,13 @@ module.exports = generators.Base.extend({
         name: 'authorName',
         message: 'Author\'s Name',
         // default: this.user.git.name(),
+        default: 'author',
         // store: true
       }, {
         name: 'authorEmail',
         message: 'Author\'s Email',
         // default: this.user.git.mail(),
+        default: 'email',
         // store: true
       }];
 
@@ -87,7 +91,11 @@ module.exports = generators.Base.extend({
         }, {
           name: 'Modernizr',
           value: 'includeModernizr',
-          checked: true
+          checked: false
+        }, {
+          name: 'jQuery',
+          value: 'includeJQuery',
+          checked: false
         }]
       }, {
         type: 'confirm',
@@ -98,12 +106,12 @@ module.exports = generators.Base.extend({
         type: 'confirm',
         name: 'globalReset',
         message: 'global useragent reset?',
-        default: true
-      }, {
-        type: 'confirm',
-        name: 'includeJQuery',
-        message: 'Would you like to include jQuery?',
-        default: true
+        default: false
+      // }, {
+      //   type: 'confirm',
+      //   name: 'includeJQuery',
+      //   message: 'Would you like to include jQuery?',
+      //   default: false
       }];
 
       this.prompt(prompts, function (answers) {
@@ -115,9 +123,9 @@ module.exports = generators.Base.extend({
 
         this.includeFlxGrid     = hasFeature('includeFlxGrid');
         this.includeModernizr   = hasFeature('includeModernizr');
+        this.includeJQuery      = hasFeature('includeModernizr');
         this.useJade            = answers.useJade;
         this.globalReset        = answers.globalReset;
-        this.includeJQuery      = answers.includeJQuery;
 
         done();
       }.bind(this));
@@ -178,7 +186,7 @@ module.exports = generators.Base.extend({
       };
 
       if (this.includeFlxGrid) {
-        bowerJson.dependencies['flx-gird'] = 'colorlight4/flx-grid-scss';
+        bowerJson.dependencies['flx-grid'] = 'colorlight4/flx-grid-scss';
       }
 
       if (this.includeJQuery) {
