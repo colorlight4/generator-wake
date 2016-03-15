@@ -29,7 +29,7 @@ module.exports = yeoman.generators.Base.extend({
 
   writing: function () {
 
-    this.spawnCommand('bower', ['install git://github.com/colorlight4/flx-grid.scss.git']);
+    // this.spawnCommand('bower', ['install git://github.com/colorlight4/flx-grid.scss.git']);
     // this.fs.copy(
     //   this.templatePath('src/**/*'),
     //   this.destinationPath('src/')
