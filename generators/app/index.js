@@ -106,6 +106,8 @@ module.exports = generators.Base.extend({
         this.templatePath('src/**/*'),
         this.destinationPath('src/')
       );
+
+
     },
 
     readme: function () {
@@ -120,8 +122,25 @@ module.exports = generators.Base.extend({
     }
   },
 
-  install: function () {
-    this.npmInstall();
+  install: {
+    // normalize: function() {
+    //   this.bowerInstall(['JohnAlbin/normalize-scss']);
+    // },
+    // flxgird: function () {
+    //   this.bowerInstall(['colorlight4/flx-grid-scss']);
+    // },
+    npm: function () {
+      this.npmInstall();
+    }
+  },
+
+  end: function () {
+      // this.fs.copy(
+      //   this.templatePath('bower_components/normalize-scss/sass/**/*'),
+      //   this.destinationPath('src/scss/vendor/'));
+      // this.fs.copy(
+      //   this.templatePath('bower_components/flx-grid-scss/*'),
+      //   this.destinationPath('src/scss/vendor/flx-grid-scss/'));
   }
 
 });
