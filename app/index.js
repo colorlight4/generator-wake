@@ -127,18 +127,8 @@ module.exports = generators.Base.extend({
   writing: {
     gulpfile: function () {
       this.fs.copyTpl(
-        this.templatePath('gulpfile.babel.js'),
-        this.destinationPath('gulpfile.babel.js'),
-        {
-          date: (new Date).toISOString().split('T')[0],
-          name: this.pkg.name,
-          version: this.pkg.version,
-          // includeSass: this.includeSass,
-          // includeBootstrap: this.includeBootstrap,
-          // includeBabel: this.options['babel'],
-          // testFramework: this.options['test-framework']
-        }
-      );
+        this.templatePath('gulpfile.js'),
+        this.destinationPath('gulpfile.js'));
     },
 
     packageJSON: function () {
@@ -169,7 +159,7 @@ module.exports = generators.Base.extend({
 
     babel: function () {
       this.fs.copy(
-        this.templatePath('babelrc'),
+        this.templatePath('.babelrc'),
         this.destinationPath('.babelrc')
       );
     },
@@ -187,7 +177,7 @@ module.exports = generators.Base.extend({
         dependencies: {}
       };
 
-      if (this.inlcudeFlxGrid) {
+      if (this.includeFlxGrid) {
         bowerJson.dependencies['flx-gird'] = 'colorlight4/flx-grid-scss';
       }
 
@@ -200,16 +190,16 @@ module.exports = generators.Base.extend({
       }
 
       this.fs.writeJSON('bower.json', bowerJson);
+
       this.fs.copy(
-        this.templatePath('bowerrc'),
-        this.destinationPath('.bowerrc')
-      );
+        this.templatePath('.bowerrc'),
+        this.destinationPath('.bowerrc'));
     },
 
     rootCopy: function () {
       this.fs.copy(
-        this.templatePath('root/'),
-        this.destinationPath('root/'));
+        this.templatePath('src/root/*'),
+        this.destinationPath('src/root/'));
     },
 
     styles: function () {
@@ -234,7 +224,7 @@ module.exports = generators.Base.extend({
 
       this.fs.copyTpl(
         this.templatePath('src/kit/**/*'),
-        this.destinationPath('src/kit/**/*'),
+        this.destinationPath('src/kit/'),
         {
           name: this.props.name,
           discription: this.props.discription,
@@ -260,11 +250,11 @@ module.exports = generators.Base.extend({
   },
 
   install: function () {
-    this.installNpm();
-    // this.installDependencies({
-    //   skipMessage: this.options['skip-install-message'],
-    //   skipInstall: this.options['skip-install']
-    // });
+    // this.installNpm();
+    this.installDependencies({
+      skipMessage: this.options['skip-install-message'],
+      skipInstall: this.options['skip-install']
+    });
   },
 
   end: function () {
@@ -295,7 +285,7 @@ module.exports = generators.Base.extend({
       // wire Bower packages to .scss
       wiredep({
         bowerJson: bowerJson,
-        directory: 'bower_components',
+        directory: 'src/bower_components',
         ignorePath: /^(\.\.\/)+/,
         src: 'src/scss/*.scss'
       });
