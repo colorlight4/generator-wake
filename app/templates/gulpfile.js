@@ -15,6 +15,14 @@ var browserSync  = require('browser-sync'),
     autoprefixer = require('autoprefixer'),
     cssnano      = require('cssnano')
 
+gulp.task('bower', function() {
+    wiredep({
+      bowerJson: bowerJson,
+      directory: 'bower_components',
+      ignorePath: /^(\.\.\/)+/,
+      src: 'app/src/scss/*.scss'
+    });
+});
 
 gulp.task('kit', function() {
     gulp.src('src/kit/*.kit')
@@ -62,6 +70,10 @@ gulp.task('copy', function() {
 
     gulp.src('src/fonts/**/*')
         .pipe(gulp.dest('dist/fonts/'))
+        .pipe(reload({stream:true}));
+        
+    gulp.src('src/root/**/*')
+        .pipe(gulp.dest('dist/'))
         .pipe(reload({stream:true}));
 });
 
