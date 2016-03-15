@@ -1,2 +1,3 @@
-# boilerpalte
+# <%= projectName %>
 
+> <%= description %>
