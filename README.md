@@ -2,10 +2,10 @@
 
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and clone this repo.
+First, install [Yeoman](http://yeoman.io), clone this repo.
 
 ```sh
-  # link repo to your global node_modules folder
+  # link the generator to your global node_modules folder
   npm link
 
   # generate your new project

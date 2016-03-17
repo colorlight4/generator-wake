@@ -1,12 +1,7 @@
 'use strict';
 var generators  = require('yeoman-generator'),
-    yosay       = require('yosay'),
-    chalk       = require('chalk'),
     wiredep     = require('wiredep'),
     mkdirp      = require('mkdirp'),
-    _s          = require('underscore.string'),
-    parseAuthor = require('parse-author'),
-
     _       = require('lodash'),
     extend  = _.merge
 
@@ -15,20 +10,15 @@ module.exports = generators.Base.extend({
 
     generators.Base.apply(this, arguments);
 
-    this.option('skip-welcome-message', {
-      desc: 'Skips the welcome message',
-      type: Boolean
-    });
-
     this.option('skip-install-message', {
       desc: 'Skips the message after the installation of dependencies',
       type: Boolean
     });
 
-    this.option('babel', {
-      desc: 'Use Babel',
+    this.option('module', {
+      desc: 'use this as a module',
       type: Boolean,
-      defaults: true
+      defaults: false
     });
   },
 
@@ -41,34 +31,23 @@ module.exports = generators.Base.extend({
     askFor: function () {
       var done = this.async();
 
-      // if (!this.options['skip-welcome-message']) {
-      //   this.log(yosay('\'Allo \'allo! Out of the box I include HTML5 Boilerplate, jQuery, and a gulpfile to build your app.'));
-      // }
-
       var prompts = [{
         name: 'name',
         message: 'Project Name',
-        default: 'name',
       }, {
         name: 'description',
         message: 'Description',
-        default: 'discription',
       }, {
         name: 'url',
         message: 'Project Website',
-        default: '#',
       }, {
         name: 'authorName',
         message: 'Author\'s Name',
-        // default: this.user.git.name(),
-        default: 'author',
-        // store: true
+        default: this.user.git.name()
       }, {
         name: 'authorEmail',
         message: 'Author\'s Email',
-        // default: this.user.git.mail(),
-        default: 'email',
-        // store: true
+        default: this.user.git.email()
       }];
 
       this.prompt(prompts, function (props) {
@@ -100,18 +79,8 @@ module.exports = generators.Base.extend({
       }, {
         type: 'confirm',
         name: 'useJade',
-        message: 'Would you like to use jade instead of kit?',
+        message: 'use jade instead of kit?',
         default: false
-      }, {
-        type: 'confirm',
-        name: 'globalReset',
-        message: 'global useragent reset?',
-        default: false
-      // }, {
-      //   type: 'confirm',
-      //   name: 'includeJQuery',
-      //   message: 'Would you like to include jQuery?',
-      //   default: false
       }];
 
       this.prompt(prompts, function (answers) {
@@ -123,9 +92,8 @@ module.exports = generators.Base.extend({
 
         this.includeFlxGrid     = hasFeature('includeFlxGrid');
         this.includeModernizr   = hasFeature('includeModernizr');
-        this.includeJQuery      = hasFeature('includeModernizr');
+        this.includeJQuery      = hasFeature('includeJQuery');
         this.useJade            = answers.useJade;
-        this.globalReset        = answers.globalReset;
 
         done();
       }.bind(this));
@@ -136,17 +104,21 @@ module.exports = generators.Base.extend({
     gulpfile: function () {
       this.fs.copyTpl(
         this.templatePath('gulpfile.js'),
-        this.destinationPath('gulpfile.js'));
+        this.destinationPath('gulpfile.js'),
+        {
+          useJade: this.useJade,
+          module: this.options['module']
+        });
     },
 
     packageJSON: function () {
-      this.fs.copy(
+      this.fs.copyTpl(
         this.templatePath('_package.json'),
-        this.destinationPath('package.json')
-        // {
-        //   includeSass: this.includeSass,
-        //   includeBabel: this.options['babel']
-        // }
+        this.destinationPath('package.json'),
+        {
+          useJade: this.useJade,
+          module: this.options['module']
+        }
       );
 
       var currentPkg = this.fs.readJSON(this.destinationPath('package.json'), {});
@@ -165,13 +137,6 @@ module.exports = generators.Base.extend({
       this.fs.writeJSON(this.destinationPath('package.json'), pkg);
     },
 
-    babel: function () {
-      this.fs.copy(
-        this.templatePath('.babelrc'),
-        this.destinationPath('.babelrc')
-      );
-    },
-
     git: function () {
       this.fs.copy(
         this.templatePath('.gitignore'),
@@ -180,21 +145,31 @@ module.exports = generators.Base.extend({
 
     bower: function () {
       var bowerJson = {
-        name: _s.slugify(this.props.name),
+        name: _.kebabCase(this.props.name),
         version: '0.1.0',
         dependencies: {}
       };
 
       if (this.includeFlxGrid) {
-        bowerJson.dependencies['flx-grid'] = 'colorlight4/flx-grid-scss';
+        bowerJson.dependencies['flx-grid-scss'] = 'colorlight4/flx-grid-scss';
+        var overrides = extend({
+          overrides: {
+              "flx-grid-scss": {
+                "main": [
+                  "flx-grid.scss"]}}
+        }, bowerJson);
       }
 
       if (this.includeJQuery) {
-        bowerJson.dependencies['jquery'] = '~2.1.1';
+        bowerJson.dependencies['jquery'] = '^2.2.2';
       }
 
       if (this.includeModernizr) {
-        bowerJson.dependencies['modernizr'] = '~2.8.1';
+        bowerJson.dependencies['modernizr'] = '^3.3.1';
+      }
+
+      if (!this.options['module']) {
+       bowerJson.dependencies['normalize.scss'] = '4.0.3'; 
       }
 
       this.fs.writeJSON('bower.json', bowerJson);
@@ -206,7 +181,7 @@ module.exports = generators.Base.extend({
 
     rootCopy: function () {
       this.fs.copy(
-        this.templatePath('src/root/*'),
+        this.templatePath('src/root/**/*'),
         this.destinationPath('src/root/'));
     },
 
@@ -214,10 +189,6 @@ module.exports = generators.Base.extend({
       this.fs.copy(
         this.templatePath('src/scss/**/*'),
         this.destinationPath('src/scss/')
-        // ,
-        // {
-        //   includeBootstrap: this.includeBootstrap
-        // }
       );
     },
 
@@ -228,14 +199,18 @@ module.exports = generators.Base.extend({
       );
     },
 
-    html: function () {
+    tmpl: function () {
+      var tmplLang = 'kit';
+      if (this.useJade) {
+        tmplLang = 'jade';
+      }
 
       this.fs.copyTpl(
-        this.templatePath('src/kit/**/*'),
-        this.destinationPath('src/kit/'),
+        this.templatePath('src/'+tmplLang+'/**/*'),
+        this.destinationPath('src/'+tmplLang+'/'),
         {
           name: this.props.name,
-          discription: this.props.discription,
+          description: this.props.description,
           url: this.props.url
         }
       );
@@ -252,13 +227,12 @@ module.exports = generators.Base.extend({
     },
 
     misc: function () {
-      mkdirp('src/images');
+      mkdirp('src/img');
       mkdirp('src/fonts');
     }
   },
 
   install: function () {
-    // this.installNpm();
     this.installDependencies({
       skipMessage: this.options['skip-install-message'],
       skipInstall: this.options['skip-install']
@@ -267,36 +241,33 @@ module.exports = generators.Base.extend({
 
   end: function () {
     var bowerJson = this.fs.readJSON(this.destinationPath('bower.json'));
-    var howToInstall =
-      '\nAfter running ' +
-      chalk.yellow.bold('npm install & bower install') +
-      ', inject your' +
-      '\nfront end dependencies by running ' +
-      chalk.yellow.bold('gulp wiredep') +
-      '.';
 
-    if (this.options['skip-install']) {
-      this.log(howToInstall);
-      return;
-    }
+    wiredep({
+      src: ['src/jade/partials/head.jade', 'src/kit/partials/head.kit', 'src/scss/main.scss'],
 
-    // wire Bower packages to .html
-    // wiredep({
-    //   bowerJson: bowerJson,
-    //   directory: 'bower_components',
-    //   exclude: ['bootstrap-sass', 'bootstrap.js'],
-    //   ignorePath: /^(\.\.\/)*\.\./,
-    //   src: 'app/index.html'
-    // });
+      onError : function(err) {
+            console.log("Wiredep error: "+err);
+      },
+      onFileUpdated : function (filePath) {
+          console.log('File path was updated: ' + filePath);
+      },
+      onPathInjected : function (fileObject) {
+          console.log('Path injected: ' + JSON.stringify(fileObject));
+      },
 
-    // if (this.includeSass) {
-      // wire Bower packages to .scss
-      wiredep({
-        bowerJson: bowerJson,
-        directory: 'src/bower_components',
-        ignorePath: /^(\.\.\/)+/,
-        src: 'src/scss/*.scss'
-      });
-    // }
+      filetype: {
+        kit: {
+          block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
+          detect: {
+            js: /<script.*src=['"]([^'"]+)/gi,
+            css: /<link.*href=['"]([^'"]+)/gi
+          },
+          replace: {
+            js: '<script src="{{filePath}}"></script>',
+            css: '<link rel="stylesheet" href="{{filePath}}" />'
+          }
+        }
+      }
+    });
   }
 });

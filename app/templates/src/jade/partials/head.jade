@@ -1,0 +1,28 @@
+doctype html
+
+html(lang="de")
+head
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(charset="UTF-8")
+    meta(name="HandheldFriendly" content="True")
+
+    title= "<%= name %>"
+
+    meta(property="og:url" content="<%= url %>")
+    meta(property="og:type" content="website")
+    meta(property="og:title" content="<%= name %>")
+    meta(property="og:locale" content="de_de")
+    meta(property="og:image" content="#")
+    meta(property="og:description" content="<%= description %>")
+
+    //- link(rel="apple-touch-icon" href="apple-touch-icon.png")
+
+    meta(name="application-name" content="<%= name %>")
+    meta(name="msapplication-TileImage" content="#")
+    meta(name="msapplication-TileColor" content="#fff")
+
+    //- bower:js
+    //- endbower
+
+    link(rel="stylesheet" href="css/main.css")
+    script(src="js/main.js")
