@@ -2,8 +2,8 @@
 var generators  = require('yeoman-generator'),
     wiredep     = require('wiredep'),
     mkdirp      = require('mkdirp'),
-    _       = require('lodash'),
-    extend  = _.merge
+    _           = require('lodash'),
+    extend      = _.merge
 
 module.exports = generators.Base.extend({
   constructor: function () {

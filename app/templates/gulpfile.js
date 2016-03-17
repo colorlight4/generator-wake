@@ -51,7 +51,6 @@ gulp.task('scss', function() {
             initial(reset: 'inherited'),
             autoreset(), <% } %>
             autoprefixer({ browsers: ['last 2 versions'] }),
-            cssnano({autoprefixer: false}),
             reporter({clearMessages: true, throwError: true })
         ]) )
         .pipe( sourcemaps.write('.'))
