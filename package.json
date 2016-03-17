@@ -2,8 +2,8 @@
   "dependencies": {
     "lodash": "^4.6.1",
     "mkdirp": "^0.5.1",
-    "wiredep": "^2.2.2",
-    "yeoman-generator": "^0.20.1"
+    "wiredep": "^4.0.0",
+    "yeoman-generator": "^0.22.5"
   },
   "files": [
     "app"
