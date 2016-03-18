@@ -2,14 +2,14 @@
 [![Build Status](https://travis-ci.org/colorlight4/generator-wake.svg?branch=master)](https://travis-ci.org/colorlight4/generator-wake) [![Dependency Status](https://david-dm.org/colorlight4/generator-wake/status.svg)](https://david-dm.org/colorlight4/generator-wake#info=Dependencies) [![GitHub release](https://img.shields.io/github/release/colorlight4/generator-wake.svg)](https://github.com/colorlight4/generator-wake/releases) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/colorlight4/generator-wake/master/LICENSE)
 ## Features
 - [kit][1] or [jade][2] 
-- [scss][3] AND [postcss][4]
+- [scss][3] (w/ libsass) **AND** [postcss][4]
   - autoprefixing
   - global/local useragent reset
 - [jQuery][5] & [Modernizr][6] opt-in
 - js, kit/jade and scss sourcemaps
 - image optimization
 - automagically wire-up [Bower][7] dependencies
-- desktop notifikations
+- gulp status desktop notifikations
 - preview server with [BrowserSync][8]
 
 ## Installation
