@@ -6,7 +6,7 @@
 - update generated packages
 - remove unnecessary waste
 - rethink gulp "use" tasks
-- imporve gulp err handling 
+- improve gulp err handling 
 	- plumer
 	- notify if err
 - wiredep
