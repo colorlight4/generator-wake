@@ -12,7 +12,7 @@
 - gulp status desktop notifikations
 - preview server with [BrowserSync][8]
 
-## Installation
+## Usage
 
 First, install [Yeoman][9], clone this repo.
 
