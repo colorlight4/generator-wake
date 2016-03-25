@@ -14,9 +14,9 @@
 - postcss packages
 - uncss
 - clean support BrowserSync
-- proper normalize.scss -> colorlight4/normalize.scss
-	- opt out support-for
-	- redirect "import-now"
+- ~~proper normalize.scss -> colorlight4/normalize.scss~~
+	- ~~opt out support-for~~
+	- ~~redirect "import-now"~~
 - advanced constructor
 	- generat opt in
 		- .travis.yml
@@ -26,3 +26,6 @@
 - babel support
 - coveralls testing
 - jade -> pug (asa stable)
+- normalize-scss -> normalize.css 4.0 https://github.com/necolas/normalize.css
+- position: sticky polyfill https://github.com/soenkekluth/sticky-state
+- gulp modinzier support?
