@@ -13,7 +13,7 @@
 	- in gulp inlcude
 - postcss packages
 - uncss
-- clean support BrowserSync
+- clean BrowserSync support
 - ~~proper normalize.scss -> colorlight4/normalize.scss~~
 	- ~~opt out support-for~~
 	- ~~redirect "import-now"~~
