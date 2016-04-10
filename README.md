@@ -24,6 +24,9 @@ First, install [Yeoman][9], clone this repo.
   yo wake
 ```
 
+## Open Tasks
+check out the [Dev branch][10] for currentlty open tasks and improvment ideas
+
 [1]: https://incident57.com/codekit/help.html#kit
 [2]: http://jade-lang.com/
 [3]: http://sass-lang.com/
@@ -33,3 +36,4 @@ First, install [Yeoman][9], clone this repo.
 [7]: http://bower.io
 [8]: https://www.browsersync.io/
 [9]: http://yeoman.io
+[10]: https://github.com/colorlight4/generator-wake/tree/dev
