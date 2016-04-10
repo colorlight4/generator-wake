@@ -25,7 +25,7 @@ First, install [Yeoman][9], clone this repo.
 ```
 
 ## Open Tasks
-check out the [Dev branch][10] for currentlty open tasks and improvment ideas
+check out the [dev branch][10] for currentlty open tasks and improvment ideas
 
 [1]: https://incident57.com/codekit/help.html#kit
 [2]: http://jade-lang.com/
