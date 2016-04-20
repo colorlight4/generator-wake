@@ -3,7 +3,6 @@
 > dev branch
 
 ### open tasks
-- update generated packages
 - remove unnecessary waste
 - rethink gulp "use" tasks
 - implement all done message
@@ -32,3 +31,6 @@
 - gird layout polyfill optin https://github.com/codler/Grid-Layout-Polyfill
 - gulp modinzier support?
 - update to gulp 4
+
+### done 
+- update generated packages

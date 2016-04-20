@@ -5,8 +5,8 @@ var browserSync  = require('browser-sync'),
     uglify       = require('gulp-uglify'),
     include      = require('gulp-include'),
     sourcemaps   = require('gulp-sourcemaps'),
-    notify       = require("gulp-notify"), <% if (useJade) { %>
-    jade         = require('gulp-jade'), <% } else { %>
+    notify       = require("gulp-notify"), <% if (usePug) { %>
+    pug          = require('gulp-pug'), <% } else { %>
     kit          = require('gulp-kit'), <% } %>
     del          = require('del'),
     htmlmin      = require('gulp-htmlmin'),
@@ -24,11 +24,11 @@ var browserSync  = require('browser-sync'),
     scss         = require('postcss-scss'),
     autoprefixer = require('autoprefixer')
 
-gulp.task('tmpl', function() { <% if (useJade) { %>
-    gulp.src('src/jade/*.jade')
-        .pipe(jade())
+gulp.task('tmpl', function() { <% if (usePug) { %>
+    gulp.src('src/pug/*.pug')
+        .pipe(pug())
         .pipe(gulp.dest('dist/'))
-        .pipe(notify("jade compiled")) <% } else { %>
+        .pipe(notify("pug compiled")) <% } else { %>
     gulp.src('src/kit/*.kit')
         .pipe(kit())
         .pipe(gulp.dest('dist/'))
@@ -119,8 +119,8 @@ gulp.task('clean', function () {
 
 // use task
 
-gulp.task('watch', function() { <% if (useJade) { %>
-    gulp.watch('src/jade/**/*.jade', ['jade']); <% } else { %>
+gulp.task('watch', function() { <% if (usePug) { %>
+    gulp.watch('src/pug/**/*.pug', ['pug']); <% } else { %>
     gulp.watch('src/kit/**/*.kit', ['kit']); <% } %>
     gulp.watch('src/scss/**/*.scss', ['scss']);
     gulp.watch('src/js/**/*', ['js']);

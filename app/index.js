@@ -78,8 +78,8 @@ module.exports = generators.Base.extend({
         }]
       }, {
         type: 'confirm',
-        name: 'useJade',
-        message: 'use jade instead of kit?',
+        name: 'usePug',
+        message: 'use Pug instead of kit?',
         default: false
       }];
 
@@ -93,7 +93,7 @@ module.exports = generators.Base.extend({
         this.includeFlxGrid     = hasFeature('includeFlxGrid');
         this.includeModernizr   = hasFeature('includeModernizr');
         this.includeJQuery      = hasFeature('includeJQuery');
-        this.useJade            = answers.useJade;
+        this.usePug             = answers.usePug;
 
         done();
       }.bind(this));
@@ -106,7 +106,7 @@ module.exports = generators.Base.extend({
         this.templatePath('gulpfile.js'),
         this.destinationPath('gulpfile.js'),
         {
-          useJade: this.useJade,
+          usePug: this.Pug,
           module: this.options['module']
         });
     },
@@ -116,7 +116,7 @@ module.exports = generators.Base.extend({
         this.templatePath('_package.json'),
         this.destinationPath('package.json'),
         {
-          useJade: this.useJade,
+          usePug: this.Pug,
           module: this.options['module']
         }
       );
@@ -201,8 +201,8 @@ module.exports = generators.Base.extend({
 
     tmpl: function () {
       var tmplLang = 'kit';
-      if (this.useJade) {
-        tmplLang = 'jade';
+      if (this.usePug) {
+        tmplLang = 'pug';
       }
 
       this.fs.copyTpl(
@@ -243,7 +243,7 @@ module.exports = generators.Base.extend({
     var bowerJson = this.fs.readJSON(this.destinationPath('bower.json'));
 
     wiredep({
-      src: ['src/jade/partials/head.jade', 'src/kit/partials/head.kit', 'src/scss/main.scss'],
+      src: ['src/pug/partials/head.pug', 'src/kit/partials/head.kit', 'src/scss/main.scss'],
 
       onError : function(err) {
             console.log("Wiredep error: "+err);
