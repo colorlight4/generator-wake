@@ -25,7 +25,6 @@
 		- etc.
 - babel support
 - coveralls testing
-- jade -> pug
 - normalize-scss -> normalize.css 4.0 https://github.com/necolas/normalize.css
 - position: sticky polyfill https://github.com/soenkekluth/sticky-state
 - gird layout polyfill optin https://github.com/codler/Grid-Layout-Polyfill
@@ -34,3 +33,4 @@
 
 ### done 
 - update generated packages
+- jade -> pug
