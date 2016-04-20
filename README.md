@@ -14,10 +14,10 @@
 	- in gulp inlcude
 - postcss packages
 - uncss
-- clean support BrowserSync
-- proper normalize.scss -> colorlight4/normalize.scss
-	- opt out support-for
-	- redirect "import-now"
+- clean BrowserSync support
+- ~~proper normalize.scss -> colorlight4/normalize.scss~~
+	- ~~opt out support-for~~
+	- ~~redirect "import-now"~~
 - advanced constructor
 	- generat opt in
 		- .travis.yml
@@ -26,4 +26,9 @@
 		- etc.
 - babel support
 - coveralls testing
-- jade -> pug (asa stable)
+- jade -> pug
+- normalize-scss -> normalize.css 4.0 https://github.com/necolas/normalize.css
+- position: sticky polyfill https://github.com/soenkekluth/sticky-state
+- gird layout polyfill optin https://github.com/codler/Grid-Layout-Polyfill
+- gulp modinzier support?
+- update to gulp 4
