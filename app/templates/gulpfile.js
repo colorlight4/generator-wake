@@ -22,6 +22,13 @@ var browserSync  = require('browser-sync'),
     reporter     = require('postcss-reporter'),
     hexrgba      = require('postcss-hexrgba'),
     scss         = require('postcss-scss'),
+
+    aColors      = require('postcss-all-link-colors'),
+    clearfix     = require('postcss-clearfix'),
+    verthorz     = require('postcss-verthorz'),
+    fontMagic    = require('postcss-font-magician'),
+    alias        = require('postcss-alias'),
+
     autoprefixer = require('autoprefixer')
 
 
@@ -43,6 +50,11 @@ gulp.task('scss', function() {
         .pipe( sourcemaps.init())
         .pipe( postcss([ 
             // stylelint(),
+            fontMagic({ hosted: '../fonts' }),
+            alias(),
+            aColors(),
+            clearfix({ display: 'table' }),
+            verthorz(),
             hexrgba(),
             reporter({clearMessages: true, throwError: true })], 
             { parser: scss })
