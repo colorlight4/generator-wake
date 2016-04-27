@@ -21,7 +21,6 @@
 		- etc.
 - babel support
 - coveralls testing
-- normalize-scss -> normalize.css 4.0 https://github.com/necolas/normalize.css
 - position: sticky polyfill https://github.com/soenkekluth/sticky-state
 - gird layout polyfill optin https://github.com/codler/Grid-Layout-Polyfill
 - gulp modinzier support?
@@ -33,3 +32,4 @@
 - update generated packages
 - jade -> pug
 - improve gulp default task
+- normalize-scss -> normalize.css 4.0 https://github.com/necolas/normalize.css
