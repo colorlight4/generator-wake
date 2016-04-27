@@ -24,6 +24,8 @@ var browserSync  = require('browser-sync'),
     scss         = require('postcss-scss'),
     autoprefixer = require('autoprefixer')
 
+
+
 gulp.task('tmpl', function() { <% if (usePug) { %>
     gulp.src('src/pug/*.pug')
         .pipe(pug())
@@ -35,7 +37,6 @@ gulp.task('tmpl', function() { <% if (usePug) { %>
         .pipe(notify("kit compiled")) <% } %>
         .pipe(reload({stream:true}));
 });
-
 
 gulp.task('scss', function() {
     gulp.src('src/scss/*.scss')
@@ -116,16 +117,18 @@ gulp.task('clean', function () {
     del('dist/');
 });
 
+gulp.task('done', function () {
+    notify("gulp run successful");
+});
 
 // use task
-
 gulp.task('watch', function() { <% if (usePug) { %>
-    gulp.watch('src/pug/**/*.pug', ['pug']); <% } else { %>
-    gulp.watch('src/kit/**/*.kit', ['kit']); <% } %>
+    gulp.watch('src/pug/**/*.pug', ['tmpl']); <% } else { %>
+    gulp.watch('src/kit/**/*.kit', ['tmpl']); <% } %>
     gulp.watch('src/scss/**/*.scss', ['scss']);
     gulp.watch('src/js/**/*', ['js']);
 });
 
 gulp.task('server', ['watch', 'browser-sync']);
 
-gulp.task('default',['tmpl','scss','js','copy']);
+gulp.task('default',['clean','tmpl','scss','js','copy','minify','done']);
