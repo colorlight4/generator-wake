@@ -14,6 +14,7 @@ var browserSync  = require('browser-sync'),
     imagemin     = require('gulp-imagemin'),
     plumber      = require('gulp-plumber'),
     wiredep      = require('wiredep'),
+    uncss        = require('gulp-uncss');
 
     postcss      = require('gulp-postcss'),
     cssnano      = require('cssnano'), <% if (!module) { %>
@@ -131,6 +132,14 @@ gulp.task('clean', function () {
 
 gulp.task('done', function () {
     notify("gulp run successful");
+});
+
+gulp.task('uncss', function () {
+     return gulp.src('dist/**/*.css')
+        .pipe(uncss({
+            html: ['../**/*.html']
+        }))
+        .pipe(gulp.dest('dist/'));
 });
 
 // use task

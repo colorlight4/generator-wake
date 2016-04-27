@@ -21,6 +21,7 @@
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.5.1",
     "gulp-uglify": "^1.5.3",
+    "gulp-uncss": "^1.0.5",
     "postcss-alias": "^0.2.2",
     "postcss-all-link-colors": "^1.0.1",
     "postcss-clearfix": "^1.0.0",
