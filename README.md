@@ -5,8 +5,6 @@
 ### open tasks
 - remove unnecessary waste
 - rethink gulp tasks
-- improve gulp default task
-- implement all done message
 - improve gulp err handling 
 	- plumer
 	- notify if err
@@ -15,9 +13,6 @@
 - postcss packages
 - uncss
 - clean BrowserSync support
-- ~~proper normalize.scss -> colorlight4/normalize.scss~~
-	- ~~opt out support-for~~
-	- ~~redirect "import-now"~~
 - advanced constructor
 	- generat opt in
 		- .travis.yml
@@ -34,5 +29,7 @@
 
 
 ### done 
+- implement all done message
 - update generated packages
 - jade -> pug
+- improve gulp default task

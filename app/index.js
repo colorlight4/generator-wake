@@ -76,11 +76,11 @@ module.exports = generators.Base.extend({
           value: 'includeJQuery',
           checked: false
         }]
-      }, {
-        type: 'confirm',
-        name: 'usePug',
-        message: 'use Pug instead of kit?',
-        default: false
+      // }, {
+      //   type: 'confirm',
+      //   name: 'usePug',
+      //   message: 'use Pug instead of kit?',
+      //   default: false
       }];
 
       this.prompt(prompts, function (answers) {
@@ -93,7 +93,8 @@ module.exports = generators.Base.extend({
         this.includeFlxGrid     = hasFeature('includeFlxGrid');
         this.includeModernizr   = hasFeature('includeModernizr');
         this.includeJQuery      = hasFeature('includeJQuery');
-        this.usePug             = answers.usePug;
+        // this.usePug             = answers.usePug;
+        this.usePug             = false;
 
         done();
       }.bind(this));
@@ -244,16 +245,6 @@ module.exports = generators.Base.extend({
 
     wiredep({
       src: ['src/pug/partials/head.pug', 'src/kit/partials/head.kit', 'src/scss/main.scss'],
-
-      onError : function(err) {
-            console.log("Wiredep error: "+err);
-      },
-      onFileUpdated : function (filePath) {
-          console.log('File path was updated: ' + filePath);
-      },
-      onPathInjected : function (fileObject) {
-          console.log('Path injected: ' + JSON.stringify(fileObject));
-      },
 
       filetype: {
         kit: {
