@@ -76,11 +76,11 @@ module.exports = generators.Base.extend({
           value: 'includeJQuery',
           checked: false
         }]
-      }, {
-        type: 'confirm',
-        name: 'useJade',
-        message: 'use jade instead of kit?',
-        default: false
+      // }, {
+      //   type: 'confirm',
+      //   name: 'usePug',
+      //   message: 'use Pug instead of kit?',
+      //   default: false
       }];
 
       this.prompt(prompts, function (answers) {
@@ -93,7 +93,8 @@ module.exports = generators.Base.extend({
         this.includeFlxGrid     = hasFeature('includeFlxGrid');
         this.includeModernizr   = hasFeature('includeModernizr');
         this.includeJQuery      = hasFeature('includeJQuery');
-        this.useJade            = answers.useJade;
+        // this.usePug             = answers.usePug;
+        this.usePug             = false;
 
         done();
       }.bind(this));
@@ -106,7 +107,7 @@ module.exports = generators.Base.extend({
         this.templatePath('gulpfile.js'),
         this.destinationPath('gulpfile.js'),
         {
-          useJade: this.useJade,
+          usePug: this.Pug,
           module: this.options['module']
         });
     },
@@ -116,7 +117,7 @@ module.exports = generators.Base.extend({
         this.templatePath('_package.json'),
         this.destinationPath('package.json'),
         {
-          useJade: this.useJade,
+          usePug: this.Pug,
           module: this.options['module']
         }
       );
@@ -151,13 +152,7 @@ module.exports = generators.Base.extend({
       };
 
       if (this.includeFlxGrid) {
-        bowerJson.dependencies['flx-grid-scss'] = 'colorlight4/flx-grid-scss';
-        var overrides = extend({
-          overrides: {
-              "flx-grid-scss": {
-                "main": [
-                  "flx-grid.scss"]}}
-        }, bowerJson);
+        bowerJson.dependencies['flx-grid-scss'] = '^1.0.2';
       }
 
       if (this.includeJQuery) {
@@ -169,7 +164,7 @@ module.exports = generators.Base.extend({
       }
 
       if (!this.options['module']) {
-       bowerJson.dependencies['normalize.scss'] = '4.0.3'; 
+       bowerJson.dependencies['normalize.scss'] = '4.1.0'; 
       }
 
       this.fs.writeJSON('bower.json', bowerJson);
@@ -201,8 +196,8 @@ module.exports = generators.Base.extend({
 
     tmpl: function () {
       var tmplLang = 'kit';
-      if (this.useJade) {
-        tmplLang = 'jade';
+      if (this.usePug) {
+        tmplLang = 'pug';
       }
 
       this.fs.copyTpl(
@@ -243,17 +238,7 @@ module.exports = generators.Base.extend({
     var bowerJson = this.fs.readJSON(this.destinationPath('bower.json'));
 
     wiredep({
-      src: ['src/jade/partials/head.jade', 'src/kit/partials/head.kit', 'src/scss/main.scss'],
-
-      onError : function(err) {
-            console.log("Wiredep error: "+err);
-      },
-      onFileUpdated : function (filePath) {
-          console.log('File path was updated: ' + filePath);
-      },
-      onPathInjected : function (fileObject) {
-          console.log('Path injected: ' + JSON.stringify(fileObject));
-      },
+      src: ['src/pug/partials/head.pug', 'src/kit/partials/head.kit', 'src/scss/main.scss'],
 
       filetype: {
         kit: {

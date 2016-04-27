@@ -5,8 +5,8 @@ var browserSync  = require('browser-sync'),
     uglify       = require('gulp-uglify'),
     include      = require('gulp-include'),
     sourcemaps   = require('gulp-sourcemaps'),
-    notify       = require("gulp-notify"), <% if (useJade) { %>
-    jade         = require('gulp-jade'), <% } else { %>
+    notify       = require("gulp-notify"), <% if (usePug) { %>
+    pug          = require('gulp-pug'), <% } else { %>
     kit          = require('gulp-kit'), <% } %>
     del          = require('del'),
     htmlmin      = require('gulp-htmlmin'),
@@ -14,6 +14,7 @@ var browserSync  = require('browser-sync'),
     imagemin     = require('gulp-imagemin'),
     plumber      = require('gulp-plumber'),
     wiredep      = require('wiredep'),
+    uncss        = require('gulp-uncss');
 
     postcss      = require('gulp-postcss'),
     cssnano      = require('cssnano'), <% if (!module) { %>
@@ -22,13 +23,22 @@ var browserSync  = require('browser-sync'),
     reporter     = require('postcss-reporter'),
     hexrgba      = require('postcss-hexrgba'),
     scss         = require('postcss-scss'),
+
+    aColors      = require('postcss-all-link-colors'),
+    clearfix     = require('postcss-clearfix'),
+    verthorz     = require('postcss-verthorz'),
+    fontMagic    = require('postcss-font-magician'),
+    alias        = require('postcss-alias'),
+
     autoprefixer = require('autoprefixer')
 
-gulp.task('tmpl', function() { <% if (useJade) { %>
-    gulp.src('src/jade/*.jade')
-        .pipe(jade())
+
+
+gulp.task('tmpl', function() { <% if (usePug) { %>
+    gulp.src('src/pug/*.pug')
+        .pipe(pug())
         .pipe(gulp.dest('dist/'))
-        .pipe(notify("jade compiled")) <% } else { %>
+        .pipe(notify("pug compiled")) <% } else { %>
     gulp.src('src/kit/*.kit')
         .pipe(kit())
         .pipe(gulp.dest('dist/'))
@@ -36,12 +46,16 @@ gulp.task('tmpl', function() { <% if (useJade) { %>
         .pipe(reload({stream:true}));
 });
 
-
 gulp.task('scss', function() {
     gulp.src('src/scss/*.scss')
         .pipe( sourcemaps.init())
         .pipe( postcss([ 
             // stylelint(),
+            fontMagic({ hosted: '../fonts' }),
+            alias(),
+            aColors(),
+            clearfix({ display: 'table' }),
+            verthorz(),
             hexrgba(),
             reporter({clearMessages: true, throwError: true })], 
             { parser: scss })
@@ -89,8 +103,7 @@ gulp.task('browser-sync', function() {
         server: {
             baseDir: 'dist/'
         }
-        // proxy: '',
-        // reloadDelay: 2000
+        reloadDelay: 2000
     });
 });
 
@@ -116,16 +129,26 @@ gulp.task('clean', function () {
     del('dist/');
 });
 
+gulp.task('done', function () {
+    notify("gulp run successful");
+});
+
+gulp.task('uncss', function () {
+     return gulp.src('dist/**/*.css')
+        .pipe(uncss({
+            html: ['../**/*.html']
+        }))
+        .pipe(gulp.dest('dist/'));
+});
 
 // use task
-
-gulp.task('watch', function() { <% if (useJade) { %>
-    gulp.watch('src/jade/**/*.jade', ['jade']); <% } else { %>
-    gulp.watch('src/kit/**/*.kit', ['kit']); <% } %>
+gulp.task('watch', function() { <% if (usePug) { %>
+    gulp.watch('src/pug/**/*.pug', ['tmpl']); <% } else { %>
+    gulp.watch('src/kit/**/*.kit', ['tmpl']); <% } %>
     gulp.watch('src/scss/**/*.scss', ['scss']);
     gulp.watch('src/js/**/*', ['js']);
 });
 
 gulp.task('server', ['watch', 'browser-sync']);
 
-gulp.task('default',['tmpl','scss','js','copy']);
+gulp.task('default',['clean','tmpl','scss','js','copy','minify','done']);
