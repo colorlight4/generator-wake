@@ -103,8 +103,7 @@ gulp.task('browser-sync', function() {
         server: {
             baseDir: 'dist/'
         }
-        // proxy: '',
-        // reloadDelay: 2000
+        reloadDelay: 2000
     });
 });
 
