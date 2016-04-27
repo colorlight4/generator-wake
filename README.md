@@ -4,7 +4,8 @@
 
 ### open tasks
 - remove unnecessary waste
-- rethink gulp "use" tasks
+- rethink gulp tasks
+- improve gulp default task
 - implement all done message
 - improve gulp err handling 
 	- plumer
@@ -30,6 +31,7 @@
 - gird layout polyfill optin https://github.com/codler/Grid-Layout-Polyfill
 - gulp modinzier support?
 - update to gulp 4
+
 
 ### done 
 - update generated packages
