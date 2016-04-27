@@ -152,13 +152,7 @@ module.exports = generators.Base.extend({
       };
 
       if (this.includeFlxGrid) {
-        bowerJson.dependencies['flx-grid-scss'] = 'colorlight4/flx-grid-scss';
-        var overrides = extend({
-          overrides: {
-              "flx-grid-scss": {
-                "main": [
-                  "flx-grid.scss"]}}
-        }, bowerJson);
+        bowerJson.dependencies['flx-grid-scss'] = '^1.0.2';
       }
 
       if (this.includeJQuery) {
@@ -170,7 +164,7 @@ module.exports = generators.Base.extend({
       }
 
       if (!this.options['module']) {
-       bowerJson.dependencies['normalize.scss'] = '4.0.3'; 
+       bowerJson.dependencies['normalize.scss'] = '4.1.0'; 
       }
 
       this.fs.writeJSON('bower.json', bowerJson);
