@@ -151,4 +151,5 @@ gulp.task('watch', function() { <% if (usePug) { %>
 
 gulp.task('server', ['watch', 'browser-sync']);
 
-gulp.task('default',['clean','tmpl','scss','js','copy','minify','done']);
+// gulp.task('default',['clean','tmpl','scss','js','copy','minify','done']);
+gulp.task('default',['clean','tmpl','scss','js','copy','done']);
