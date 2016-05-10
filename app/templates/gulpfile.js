@@ -103,7 +103,6 @@ gulp.task('browser-sync', function() {
         server: {
             baseDir: 'dist/'
         }
-        reloadDelay: 2000
     });
 });
 
