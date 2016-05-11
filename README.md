@@ -9,7 +9,7 @@
 - js, kit/jade and scss sourcemaps
 - image optimization
 - automagically wire-up [Bower][7] dependencies
-- gulp status desktop notifikations
+- gulp status desktop notifications
 - preview server with [BrowserSync][8]
 
 ## Usage
