@@ -32,14 +32,15 @@ var browserSync  = require('browser-sync'),
 
     autoprefixer = require('autoprefixer')
 
-
+// err handling (plumber)
+// advanced notifications
 
 gulp.task('tmpl', function() { <% if (usePug) { %>
-    gulp.src('src/pug/*.pug')
+    gulp.src('src/pug/*.pug') // move to haml
         .pipe(pug())
         .pipe(gulp.dest('dist/'))
         .pipe(notify("pug compiled")) <% } else { %>
-    gulp.src('src/kit/*.kit')
+    gulp.src('src/kit/*.kit') // ~~kit~~ -> html include 
         .pipe(kit())
         .pipe(gulp.dest('dist/'))
         .pipe(notify("kit compiled")) <% } %>
@@ -51,19 +52,20 @@ gulp.task('scss', function() {
         .pipe( sourcemaps.init())
         .pipe( postcss([ 
             // stylelint(),
-            fontMagic({ hosted: '../fonts' }),
-            alias(),
-            aColors(),
-            clearfix({ display: 'table' }),
-            verthorz(),
+            // fontMagic({ hosted: '../fonts' }),  
+            // alias(),
+            // aColors(),
+            // clearfix({ display: 'table' }),
+            // verthorz(),
             hexrgba(),
             reporter({clearMessages: true, throwError: true })], 
             { parser: scss })
         )
         .pipe(sass({errLogToConsole: true}))
-        .pipe( postcss([ <% if (module) { %> 
-            initial(reset: 'inherited'),
-            autoreset(), <% } %>
+        .pipe( postcss([ 
+            // <% if (module) { %> 
+            // initial(reset: 'inherited'),
+            // autoreset(), <% } %>
             autoprefixer({ browsers: ['last 2 versions'] }),
             reporter({clearMessages: true, throwError: true })
         ]) )
@@ -84,8 +86,8 @@ gulp.task('js', function() {
 });
 
 
-gulp.task('copy', function() {
-    gulp.src('src/img/**/*')
+gulp.task('copy', function() { // watch
+    gulp.src('src/img/**/*') 
         .pipe(gulp.dest('dist/img/'))
         .pipe(reload({stream:true}));
 
@@ -115,7 +117,7 @@ gulp.task('minify', function() {
         .pipe(doIf('*.html', htmlmin({collapseWhitespace: true})))
         .pipe(gulp.dest('dist/'));
 
-    gulp.src('dist/img/**/*')
+    gulp.src('dist/img/**/*') // opt all images in src
         .pipe(imagemin({ 
             progressive: true, 
             interlaced: true, 
@@ -141,6 +143,9 @@ gulp.task('uncss', function () {
 });
 
 // use task
+
+// split locgical in dev and deploy
+
 gulp.task('watch', function() { <% if (usePug) { %>
     gulp.watch('src/pug/**/*.pug', ['tmpl']); <% } else { %>
     gulp.watch('src/kit/**/*.kit', ['tmpl']); <% } %>
