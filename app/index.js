@@ -163,9 +163,9 @@ module.exports = generators.Base.extend({
         bowerJson.dependencies['modernizr'] = '^3.3.1';
       }
 
-      if (!this.options['module']) {
-       bowerJson.dependencies['normalize.scss'] = '4.1.0'; 
-      }
+      // if (!this.options['module']) {
+      //  bowerJson.dependencies['normalize.scss'] = '4.1.0'; 
+      // }
 
       this.fs.writeJSON('bower.json', bowerJson);
 

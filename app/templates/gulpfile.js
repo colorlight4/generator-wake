@@ -6,29 +6,29 @@ var browserSync  = require('browser-sync'),
     include      = require('gulp-include'),
     sourcemaps   = require('gulp-sourcemaps'),
     notify       = require("gulp-notify"), <% if (usePug) { %>
-    pug          = require('gulp-pug'), <% } else { %>
-    kit          = require('gulp-kit'), <% } %>
+    // pug          = require('gulp-pug'), <% } else { %>
+    // kit          = require('gulp-kit'), <% } %> !### haml
     del          = require('del'),
     htmlmin      = require('gulp-htmlmin'),
     doIf         = require('gulp-if'),
     imagemin     = require('gulp-imagemin'),
     plumber      = require('gulp-plumber'),
-    wiredep      = require('wiredep'),
-    uncss        = require('gulp-uncss');
+    // wiredep      = require('wiredep'), !####
+    // uncss        = require('gulp-uncss'); !####
 
     postcss      = require('gulp-postcss'),
     cssnano      = require('cssnano'), <% if (!module) { %>
-    initial      = require('postcss-initial'),
-    autoreset    = require('postcss-autoreset'), <% } %>
+    // initial      = require('postcss-initial'),
+    // autoreset    = require('postcss-autoreset'), <% } %> !####
     reporter     = require('postcss-reporter'),
-    hexrgba      = require('postcss-hexrgba'),
+    // hexrgba      = require('postcss-hexrgba'),
     scss         = require('postcss-scss'),
 
-    aColors      = require('postcss-all-link-colors'),
-    clearfix     = require('postcss-clearfix'),
-    verthorz     = require('postcss-verthorz'),
-    fontMagic    = require('postcss-font-magician'),
-    alias        = require('postcss-alias'),
+    // aColors      = require('postcss-all-link-colors'),
+    // clearfix     = require('postcss-clearfix'),
+    // verthorz     = require('postcss-verthorz'),
+    // fontMagic    = require('postcss-font-magician'),
+    // alias        = require('postcss-alias'),
 
     autoprefixer = require('autoprefixer')
 
