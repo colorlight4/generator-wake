@@ -4,8 +4,16 @@ import sass from 'gulp-sass';
 // import concat from 'gulp-concat';
 // import uglify from 'gulp-uglify';
 // import rename from 'gulp-rename';
-// import cleanCSS from 'gulp-clean-css';
-// import del from 'del';
+import notify from 'gulp-notify';
+import gulpIf from 'gulp-if';
+
+import flag from 'yargs';
+
+var argv = flag.argv;
+
+if (argv.boo) {
+  console.log('yeah');
+}
 
 const paths = {
   styles: {
@@ -32,6 +40,7 @@ export function styles() {
     //   basename: 'main',
     //   suffix: '.min'
     // }))
+    .pipe(gulpIf(argv.boo, notify("ok")))
     .pipe(gulp.dest(paths.styles.dest));
 }
 
