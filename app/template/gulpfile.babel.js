@@ -30,14 +30,14 @@ const paths = {
   }
 };
 
-function styles() {
+export function styles() {
   return gulp.src(paths.styles.src)
     .pipe(sass())
     .pipe(gulpIf(flag.boo, notify('ok')))
     .pipe(gulp.dest(paths.styles.dest));
 }
 
-function images() {
+export function images() {
   return gulp.src(paths.images.src, {since: gulp.lastRun('images')})
     .pipe(imagemin({
       optimizationLevel: 5,
