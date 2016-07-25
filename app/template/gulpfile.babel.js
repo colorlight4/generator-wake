@@ -1,12 +1,14 @@
-import gulp     from 'gulp';
-import sass     from 'gulp-sass';
-import notify   from 'gulp-notify';
-import gulpIf   from 'gulp-if';
-import imagemin from 'gulp-imagemin';
-import argv     from 'yargs';
-import del      from 'del';
+import browserSync  from 'browser-sync';
+import gulp         from 'gulp';
+import sass         from 'gulp-sass';
+import notify       from 'gulp-notify';
+import gulpIf       from 'gulp-if';
+import imagemin     from 'gulp-imagemin';
+import argv         from 'yargs';
+import del          from 'del';
 
 var flag = argv.argv;
+var reload = browserSync.reload;
 
 // possible flags
 //
@@ -21,6 +23,10 @@ var flag = argv.argv;
 //    --watch  | watches
 
 const paths = {
+
+  // src base
+  // dist base
+
   styles: {
     src: 'src/**/*.scss',
     dest: 'dist/css/'
@@ -57,14 +63,16 @@ export function images() {
 images.description = 'Compressing Images in src and copy them into dist';
 
 
+const server = () => browserSync({ server: { baseDir: 'dist/' } });
+
 // const done = () => notify( 'all tasks are done' );
 // export { done };
 
-export function ok() {
-  notify([ 'all tasks are done' ]);
-}
+// export function ok() {
+//   notify([ 'all tasks are done' ]);
+// }
 
-const test = gulp.series(styles, ok);
+const test = gulp.series(styles, server);
 
 // tasks
 //
