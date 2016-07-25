@@ -2,7 +2,9 @@ import gulp     from 'gulp';
 import sass     from 'gulp-sass';
 import notify   from 'gulp-notify';
 import gulpIf   from 'gulp-if';
+import imagemin from 'gulp-imagemin';
 import argv     from 'yargs';
+import del      from 'del';
 
 var flag = argv.argv;
 
@@ -22,13 +24,16 @@ const paths = {
   styles: {
     src: 'src/**/*.scss',
     dest: 'dist/css/'
-  }
-  iamges: {
+  },
+  images: {
     src: 'src/img/**/*',
     // srcOriginal: 'src/img/orginals', ?
     dest: 'dist/img/'
   }
 };
+
+const clean = () => del([ 'dist' ]);
+export { clean };
 
 export function styles() {
   return gulp.src(paths.styles.src)
@@ -45,14 +50,21 @@ export function images() {
       interlaced: true, 
       svgoPlugins: [{cleanupIDs: false}]
     }))
-    .pipe(gulp.dest(paths.images.src));
-    .pipe(gulp.dest(paths.images.dest));
-    .pipe(notify('images compressed and copied'))
+    .pipe(gulp.dest(paths.images.src))
+    .pipe(gulp.dest(paths.images.dest))
+    .pipe(notify('images compressed and copied'));
 }
 images.description = 'Compressing Images in src and copy them into dist';
 
 
-const test = styles;
+// const done = () => notify( 'all tasks are done' );
+// export { done };
+
+export function ok() {
+  notify([ 'all tasks are done' ]);
+}
+
+const test = gulp.series(styles, ok);
 
 // tasks
 //
@@ -60,4 +72,4 @@ const test = styles;
 // watch (auto --dev)
 
 
-export default styles;
+export default test;
