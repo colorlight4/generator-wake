@@ -57,12 +57,12 @@ const paths = {
 const clean = () => del([ 'dist' ]);
 export { clean };
 
-export function html() { // dev
-  return gulp.src(paths.html.src)
+export function inject() { // dev - nur gut solange für das js weder linter, sourcemaps oder aenliches verwendung finden soll
+  return gulp.src([paths.html.src, paths.js.src], {since: gulp.lastRun('inject')})
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( include({hardFail: true}))
-    .pipe( gulp.dest(paths.html.dest))
-    .pipe( notify('html passed'))
+    .pipe( gulp.dest('dist/'))
+    .pipe( notify('injecet passed'))
     .pipe( reload({stream:true}));
 }
 
@@ -74,17 +74,6 @@ export function styles() {
     .pipe( notify('styles passed'))
     .pipe( reload({stream:true}));
 }
-
-// export function js() {
-//   return gulp.src(paths.js.src)
-//     .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-//     .pipe( include({
-//       hardFail: true
-//     }))
-//     .pipe( gulp.dest(paths.js.dest))
-//     .pipe( notify('js passed'))
-//     .pipe( reload({stream:true}));
-// }
 
 function images() {
   return gulp.src(paths.images.src, {since: gulp.lastRun('images')})
@@ -101,6 +90,13 @@ function images() {
     .pipe( reload({stream:true}));
 }
 images.description = 'Compressing Images in src and copy them into dist';
+
+function copy() {
+  return gulp.src(paths.copy.src, {since: gulp.lastRun('images')})
+    .pipe( gulp.dest(paths.copy.dest))
+    .pipe( notify('other files copyed'))
+    .pipe( reload({stream:true}));
+}
 
 function minify() {
   return gulp.src('dist/**/*') // dev
@@ -122,12 +118,19 @@ function deploy() { // dev
     }));
 }
 
-// const done = () => notify( 'all tasks are done' );
+const done = () => notify( 'all tasks are done' );
 // export { done };
 
-// export function ok() {
-//   notify([ 'all tasks are done' ]);
-// }
+
+
+export function ok() { // workaround - bug in gulp4
+  return gulp.src('dist/index.html')
+    .pipe( notify([ 'all tasks are done' ])
+}
+
+// gulp.task('test', gulp.series(
+//     done
+// ));
 
 // const test = gulp.series(styles, server);
 
