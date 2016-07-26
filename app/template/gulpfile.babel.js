@@ -1,18 +1,19 @@
 import browserSync  from 'browser-sync';
 import gulp         from 'gulp';
+import sass         from 'gulp-sass';
 import notify       from 'gulp-notify';
 import gulpIf       from 'gulp-if';
-import plumber      from 'gulp-plumber';
-import include      from 'gulp-include';
-import sourcemaps   from 'gulp-sourcemaps';
-import argv         from 'yargs';
-import del          from 'del';
-import sass         from 'gulp-sass';
 import imagemin     from 'gulp-imagemin';
 import htmlmin      from 'gulp-htmlmin';
 import cleanCSS     from 'gulp-clean-css';
 import uglify       from 'gulp-uglify';
 import rename       from 'gulp-rename';
+import include      from 'gulp-include';
+import sourcemaps   from 'gulp-sourcemaps';
+import plumber      from 'gulp-plumber';
+import sftp         from 'gulp-sftp';
+import argv         from 'yargs';
+import del          from 'del';
 import autoprefixer from 'autoprefixer';
 
 var flag = argv.argv;
@@ -56,12 +57,10 @@ const paths = {
 const clean = () => del([ 'dist' ]);
 export { clean };
 
-export function html() {
+export function html() { // dev
   return gulp.src(paths.html.src)
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-    .pipe( include({
-      hardFail: true
-    }))
+    .pipe( include({hardFail: true}))
     .pipe( gulp.dest(paths.html.dest))
     .pipe( notify('html passed'))
     .pipe( reload({stream:true}));
@@ -87,7 +86,7 @@ export function styles() {
 //     .pipe( reload({stream:true}));
 // }
 
-export function images() {
+function images() {
   return gulp.src(paths.images.src, {since: gulp.lastRun('images')})
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( imagemin({
@@ -103,8 +102,9 @@ export function images() {
 }
 images.description = 'Compressing Images in src and copy them into dist';
 
-export function minify() {
-  return gulp.src('dist/**/*')
+function minify() {
+  return gulp.src('dist/**/*') // dev
+    .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( doIf('*.js', uglify()))
     .pipe( doIf('*.css', cleanCSS()))
     .pipe( doIf('*.html', htmlmin({collapseWhitespace: true})))
@@ -113,6 +113,14 @@ export function minify() {
 }
 
 const server = () => browserSync({ server: { baseDir: 'dist/' } });
+
+function deploy() { // dev
+  return gulp.src('dist/**/*')
+    .pipe(sftp({
+      host: 'website.com',
+      auth: 'keyMain'
+    }));
+}
 
 // const done = () => notify( 'all tasks are done' );
 // export { done };
@@ -128,6 +136,6 @@ const server = () => browserSync({ server: { baseDir: 'dist/' } });
 // default (auto --prod)
 // watch (auto --dev)
 
-const production = gulp.series(clean, gulp.parallel(inject, styles, images))
+// const production = gulp.series(clean, gulp.parallel(inject, styles, images))
 
-export default production;
+// export default production;
