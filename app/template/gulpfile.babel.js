@@ -43,11 +43,12 @@ const paths = {
     dest: 'dist/js/'
   },
   styles: {
-    src: 'src/**/main.scss',
+    src: 'src/sass/main.scss',
     dest: 'dist/css/'
   },
   images: {
     src: 'src/img/**/*',
+    srcDist: 'src/img/',
     // srcOriginal: 'src/img/orginals', ?
     dest: 'dist/img/'
   },
@@ -79,7 +80,7 @@ export function styles() {
     .pipe( reload({stream:true}));
 }
 
-function images() {
+export function images() {
   return gulp.src(paths.images.src, {since: gulp.lastRun('images')})
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( imagemin({
@@ -88,7 +89,7 @@ function images() {
       interlaced: true, 
       svgoPlugins: [{cleanupIDs: false}]
     }))
-    .pipe( gulp.dest(paths.images.src))
+    .pipe( gulp.dest(paths.images.srcDist))
     .pipe( gulp.dest(paths.images.dest))
     .pipe( notify('images compressed and passed'))
     .pipe( reload({stream:true}));
@@ -102,13 +103,13 @@ function copy() {
     .pipe( reload({stream:true}));
 }
 
-function minify() {
+export function minify() {
   return gulp.src('dist/**/*') // dev
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-    .pipe( doIf('*.js', uglify()))
-    .pipe( doIf('*.css', cleanCSS()))
-    .pipe( doIf('*.html', htmlmin({collapseWhitespace: true})))
-    .pipe( rename({suffix: '.min'}))
+    .pipe( gulpIf('*.js', uglify()))
+    .pipe( gulpIf('*.css', cleanCSS()))
+    .pipe( gulpIf('*.html', htmlmin({collapseWhitespace: true})))
+    // .pipe( rename({suffix: '.min'}))
     .pipe( gulp.dest('dist/'));
 }
 
@@ -125,9 +126,9 @@ function deploy() { // dev
 // const done = () => notify( 'all tasks are done' );
 // export { done };
 
-export function done() { // workaround - bug in gulp4
+export function ok() { // workaround - bug in gulp4
   return gulp.src('dist/index.html')
-    .pipe( notify([ 'all tasks are done' ])
+    .pipe( notify([ 'all tasks are done' ]));
 }
 
 
@@ -136,7 +137,6 @@ export function done() { // workaround - bug in gulp4
 // default (auto --prod)
 // watch (auto --dev)
 
-const production = gulp.series(clean, gulp.parallel(inject, styles, images, copy), minify, done);
-
+const production = gulp.series(clean, gulp.parallel(inject, styles, images, copy), minify);
 
 export default production;
