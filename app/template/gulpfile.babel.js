@@ -43,7 +43,7 @@ const paths = {
     dest: 'dist/js/'
   },
   styles: {
-    src: 'src/sass/main.scss',
+    src: 'src/scss/main.scss',
     dest: 'dist/css/'
   },
   images: {
@@ -130,6 +130,11 @@ export function ok() { // workaround - bug in gulp4
   return gulp.src('dist/index.html')
     .pipe( notify([ 'all tasks are done' ]));
 }
+
+// gulp.task('ok', gulp.series(function(done) {    
+//     // task code here
+//     done();
+// }));
 
 
 // tasks
