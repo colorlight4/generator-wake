@@ -9,7 +9,6 @@ import cleanCSS     from 'gulp-clean-css';
 import uglify       from 'gulp-uglify';
 import rename       from 'gulp-rename';
 import include      from 'gulp-include';
-import sourcemaps   from 'gulp-sourcemaps';
 import plumber      from 'gulp-plumber';
 import sftp         from 'gulp-sftp';
 import argv         from 'yargs';
@@ -51,6 +50,11 @@ const paths = {
     src: 'src/img/**/*',
     // srcOriginal: 'src/img/orginals', ?
     dest: 'dist/img/'
+  },
+  copy: {
+    src: 'src/copy/**/*',
+    // srcOriginal: 'src/img/orginals', ?
+    dest: 'dist/'
   }
 };
 
@@ -67,7 +71,7 @@ export function inject() { // dev - nur gut solange für das js weder linter, so
 }
 
 export function styles() {
-  return gulp.src(paths.styles.src)
+  return gulp.src(paths.styles.src, { sourcemaps: true })
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( sass())
     .pipe( gulp.dest(paths.styles.dest))
@@ -118,27 +122,21 @@ function deploy() { // dev
     }));
 }
 
-const done = () => notify( 'all tasks are done' );
+// const done = () => notify( 'all tasks are done' );
 // export { done };
 
-
-
-export function ok() { // workaround - bug in gulp4
+export function done() { // workaround - bug in gulp4
   return gulp.src('dist/index.html')
     .pipe( notify([ 'all tasks are done' ])
 }
 
-// gulp.task('test', gulp.series(
-//     done
-// ));
-
-// const test = gulp.series(styles, server);
 
 // tasks
 //
 // default (auto --prod)
 // watch (auto --dev)
 
-// const production = gulp.series(clean, gulp.parallel(inject, styles, images))
+const production = gulp.series(clean, gulp.parallel(inject, styles, images, copy), minify, done);
 
-// export default production;
+
+export default production;
