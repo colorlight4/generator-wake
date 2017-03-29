@@ -1,9 +1,0 @@
-sudo: false
-language: node_js
-node_js:
-  - v5
-  - v4
-
-addons:
-    code_climate:
-        repo_token: f4e6efcbcb46acbc8d17f6ada97ef6ffcafbad209c66b802a7a65f11fe5d2a9a
