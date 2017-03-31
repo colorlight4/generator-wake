@@ -19,50 +19,60 @@ import autoprefixer from 'autoprefixer';
 var flag = argv.argv;
 var reload = browserSync.reload;
 
-const src = 'src';
+// var config = require('./config.json');
+
+const src  = 'src';
 const dist = 'dist';
 
 const paths = {
-  html: {
-    src: src + '/html/*.html',
+  tmpl: {
+    src:  src  + '/html.html',
     dest: dist + '/html/'
   },
   js: {
-    src: src + '/js/*.js',
+    src:  src  + '/js.js',
     dest: dist + '/js/'  
   },
   styles: {
-    src: src + '/scss/*.html',
+    src:  src  + '/scss/*.html',
     dest: dist + '/css/'
   },
   images: {
-    src: src + '/img/**/*',
+    src:  src  + '/img/**',
     dest: dist + '/img/'
   },
   copy: {
-    src: src + '/copy/**/*',
+    src:  src  + '/copy/**',
     dest: dist + '/'
   }
 };
 
-
 // #########
 
 
-const clean = () => del([ 'dist' ]);
+const clean = () => del([ 'dist' ]); // funktionierte bisher nicht
 export { clean };
 
-export function inject() { // dev - nur gut solange für das js weder linter, sourcemaps oder aenliches verwendung finden soll
-  return gulp.src([paths.html.src, paths.js.src], {since: gulp.lastRun('inject')})
+export function tmpl() { 
+  return gulp.src(paths.html.src, {since: gulp.lastRun('tmpl')})
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( include({hardFail: true}))
     .pipe( gulp.dest('dist/'))
-    .pipe( notify('injecet passed'))
+    .pipe( notify('tmpl passed'))
+    .pipe( reload({stream:true}));
+}
+
+export function js() { 
+  return gulp.src(paths.js.src, {since: gulp.lastRun('js')})
+    .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
+    .pipe( include({hardFail: true}))
+    .pipe( gulp.dest('dist/'))
+    .pipe( notify('js passed'))
     .pipe( reload({stream:true}));
 }
 
 export function styles() {
-  return gulp.src(paths.styles.src, {sourcemaps: true})
+  return gulp.src(paths.styles.src, {sourcemaps: true}, {since: gulp.lastRun('styles')}) // schreibweise richtig?
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     // .pipe( sourcemaps.init()) ? - eigentlich default von gulp4
     .pipe( sass())
@@ -76,7 +86,7 @@ export function styles() {
     .pipe( reload({stream:true}));
 }
 
-export function images() {
+export function images() { // optimierte modules für unterschiedliche bild typen (jpg, png, svg, default) und back up auf lokalem system
   return gulp.src(paths.images.src, {since: gulp.lastRun('images')})
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( gulp.dest(paths.images.srcOrigin))
@@ -133,32 +143,35 @@ function deploy() { // dev
 //     done();
 // }));
 
+//
+//
 
 // tasks
 //
-// default (auto --prod)
-// watch (auto --dev)
+//    dev    | development mode
+//    test   | test mode 
+//    prod   | test production mode
 
 // possible flags
 //
-//  / operation options
-//    --dev    | development mode
-//    --test   | test mode 
-//    --prod   | test production mode
-//
 //  / deploy and server
-//    --server | set virtual server
-//    --deploy | auto deploys
+
+//    --server | set virtual server - zu integrieren
+//    --deploy | auto deploys - zu integrieren
+
 //    --watch  | watches
 
+// const dev    = gulp.parallel(inject, styles, images, copy);
+// const test   = gulp.series(gulp.parallel(inject, styles, images, copy));
+// const prod   = gulp.series(clean, gulp.parallel(inject, styles, images, copy), minify);
+// const watch  = gulp.series(gulpIf(flag.dev, gulp.watch(dev)), gulpIf(flag.prod, gulp.watch(prod)))
+// const run    = gulp.series(clean, gulp.parallel(inject, styles, images, copy), minify);
 
+const para  = gulp.parallel(tmpl, js, styles, images, copy); // name
+const dev   = gulp.series(gulpIf(flag.watch, gulp.watch(dev), dev))
 
-const dev = gulp.parallel(inject, styles, images, copy);
-// const test = gulp.series(gulp.parallel(inject, styles, images, copy));
-const prod = gulp.series(clean, gulp.parallel(inject, styles, images, copy), minify);
+const prod  = gulp.series(clean, para, minify);
+const prod  = gulp.series(gulpIf(flag.watch, gulp.watch(prod), prod))
 
-const watch = gulp.series(gulpIf(flag.dev, gulp.watch(dev)), gulpIf(flag.prod, gulp.watch(prod)))
-const run = gulp.series(clean, gulp.parallel(inject, styles, images, copy), minify);
-
-export watch;
-export default run;
+export dev;
+export default prod;
