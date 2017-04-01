@@ -15,8 +15,17 @@ import argv         from 'yargs';
 import del          from 'del';
 import autoprefixer from 'autoprefixer';
 
+var minimist = require('minimist');
 
-var flag = argv.argv;
+var knownOptions = {
+  string: 'env',
+  default: { env: process.env.NODE_ENV || 'production' }
+};
+
+var argv = minimist(process.argv.slice(2), knownOptions);
+
+
+// var flag   = argv.argv;
 var reload = browserSync.reload;
 
 // var config = require('./config.json');
@@ -25,8 +34,8 @@ const src  = 'src';
 const dist = 'dist';
 
 const paths = {
-  tmpl: {
-    src:  src  + '/html.html',
+  html: {
+    src:  src  + '/html/*.html',
     dest: dist + '/html/'
   },
   js: {
@@ -34,15 +43,16 @@ const paths = {
     dest: dist + '/js/'  
   },
   styles: {
-    src:  src  + '/scss/*.html',
+    src:  src  + '/scss/*.scss',
     dest: dist + '/css/'
   },
   images: {
-    src:  src  + '/img/**',
+    src:  src  + '/img/**/*',
+    orgn: src  + 'img_orgn/',
     dest: dist + '/img/'
   },
   copy: {
-    src:  src  + '/copy/**',
+    src:  src  + '/copy/**/*',
     dest: dist + '/'
   }
 };
@@ -51,19 +61,19 @@ const paths = {
 
 
 const clean = () => del([ 'dist' ]); // funktionierte bisher nicht
-export { clean };
+// export { clean };
 
-export function tmpl() { 
-  return gulp.src(paths.html.src, {since: gulp.lastRun('tmpl')})
+export function html() { 
+  return gulp.src(paths.html.src)
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( include({hardFail: true}))
     .pipe( gulp.dest('dist/'))
-    .pipe( notify('tmpl passed'))
+    .pipe( notify('html passed'))
     .pipe( reload({stream:true}));
 }
 
 export function js() { 
-  return gulp.src(paths.js.src, {since: gulp.lastRun('js')})
+  return gulp.src(paths.js.src)
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( include({hardFail: true}))
     .pipe( gulp.dest('dist/'))
@@ -72,7 +82,7 @@ export function js() {
 }
 
 export function styles() {
-  return gulp.src(paths.styles.src, {sourcemaps: true}, {since: gulp.lastRun('styles')}) // schreibweise richtig?
+  return gulp.src(paths.styles.src, {sourcemaps: true}) // schreibweise richtig?
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     // .pipe( sourcemaps.init()) ? - eigentlich default von gulp4
     .pipe( sass())
@@ -86,31 +96,30 @@ export function styles() {
     .pipe( reload({stream:true}));
 }
 
-export function images() { // optimierte modules für unterschiedliche bild typen (jpg, png, svg, default) und back up auf lokalem system
+export function img() { // optimierte modules für unterschiedliche bild typen (jpg, png, svg, default) und back up auf lokalem system
   return gulp.src(paths.images.src, {since: gulp.lastRun('images')})
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-    .pipe( gulp.dest(paths.images.srcOrigin))
+    .pipe( gulp.dest(paths.images.orgn))
     .pipe( imagemin({
       optimizationLevel: 5,
       progressive: true,
       interlaced: true, 
       svgoPlugins: [{cleanupIDs: false}]
     }))
-    // .pipe( gulp.dest(paths.images.srcDist)) - ?
+    .pipe( gulp.dest(paths.images.src))
     .pipe( gulp.dest(paths.images.dest))
-    .pipe( notify('images compressed and passed'))
+    .pipe( notify('images compressed'))
     .pipe( reload({stream:true}));
 }
-// images.description = 'Compressing Images in src and copy them into dist';
 
-function copy() {
-  return gulp.src(paths.copy.src, {since: gulp.lastRun('copy')})
+export function copy() {
+  return gulp.src(paths.copy.src)
     .pipe( gulp.dest(paths.copy.dest))
     .pipe( notify('other files copyed'))
     .pipe( reload({stream:true}));
 }
 
-export function minify() {
+export function minify() { //  seperater task nicht nötig
   return gulp.src( dist + '/**/*') // dev
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( gulpIf('*.js', uglify()))
@@ -122,16 +131,18 @@ export function minify() {
 
 const server = () => browserSync({ server: { baseDir: dist +'/' } }); // entfertne Syncs?
 
-function deploy() { // dev
-  return gulp.src( dist +'/**/*')
-    .pipe(sftp({
-      host: 'website.com',
-      auth: 'keyMain'
-    }));
-}
+// function upload() { // dev
+//   return gulp.src( dist +'/**/*', {since: gulp.lastRun('deploy')})
+//     .pipe(sftp({
+//       host: 'website.com',
+//       auth: 'keyMain'
+//     }));
+// }
 
 // const done = () => notify( 'all tasks are done' );
 // export { done };
+
+
 
 // export function ok() { // workaround - bug in gulp4
 //   return gulp.src('dist/index.html')
@@ -167,11 +178,33 @@ function deploy() { // dev
 // const watch  = gulp.series(gulpIf(flag.dev, gulp.watch(dev)), gulpIf(flag.prod, gulp.watch(prod)))
 // const run    = gulp.series(clean, gulp.parallel(inject, styles, images, copy), minify);
 
-const para  = gulp.parallel(tmpl, js, styles, images, copy); // name
-const dev   = gulp.series(gulpIf(flag.watch, gulp.watch(dev), dev))
+const run  = gulp.parallel(tmpl, js, styles, img, copy); // name
 
-const prod  = gulp.series(clean, para, minify);
-const prod  = gulp.series(gulpIf(flag.watch, gulp.watch(prod), prod))
+export function dev() {
+  
+  .pipe();
+}
 
-export dev;
-export default prod;
+gulp.task('dev', function(done){
+  if (flag.watch) {
+    
+    done();
+  } else {
+    run;
+    done();
+  }
+});
+
+
+export function prod() {
+  
+  .pipe();
+}
+
+// const dev   = gulp.series(gulpIf(flag.watch, gulp.watch(run), dev))
+
+// const prod  = gulp.series(clean, run, minify);
+// const prod  = gulp.series(gulpIf(flag.watch, gulp.watch(prod), prod))
+
+// export dev;
+export default { prod };
