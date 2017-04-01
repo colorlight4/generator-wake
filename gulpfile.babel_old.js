@@ -11,11 +11,9 @@ import rename       from 'gulp-rename';
 import include      from 'gulp-include';
 import plumber      from 'gulp-plumber';
 import sftp         from 'gulp-sftp';
-import argv         from 'yargs';
 import del          from 'del';
 import autoprefixer from 'autoprefixer';
-
-var minimist = require('minimist');
+import minimist     from 'minimist';
 
 var knownOptions = {
   string: 'env',
@@ -67,7 +65,7 @@ export function html() {
   return gulp.src(paths.html.src)
     .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe( include({hardFail: true}))
-    .pipe( gulp.dest('dist/'))
+    .pipe( gulp.dest(paths.html.dest))
     .pipe( notify('html passed'))
     .pipe( reload({stream:true}));
 }
