@@ -10,6 +10,7 @@ import uglify       from 'gulp-uglify';
 import include      from 'gulp-include';
 import plumber      from 'gulp-plumber';
 import sftp         from 'gulp-sftp';
+import postcss      from 'gulp-postcss';
 import del          from 'del';
 import autoprefixer from 'autoprefixer';
 import minimist     from 'minimist';
@@ -31,7 +32,7 @@ const paths = {
     dest: dist + '/html/'
   },
   js: {
-    src:  src  + '/js.js',
+    src:  src  + '/js/*.js',
     dest: dist + '/js/'  
   },
   styles: {
@@ -40,6 +41,7 @@ const paths = {
   },
   images: {
     src:  src  + '/img/**/*',
+    cmpr: src  + '/img/',
     orgn: src  + '/imgOriginals/',
     dest: dist + '/img/'
   },
@@ -104,7 +106,7 @@ function imgCompress() {
       svgoPlugins: [{cleanupIDs: false}]
     }))
     .pipe( notify('images compressed'))
-    .pipe( gulp.dest(paths.images.src))
+    .pipe( gulp.dest(paths.images.cmpr))
 };
 
 function imgCopy () {
@@ -114,7 +116,7 @@ function imgCopy () {
     .pipe( reload({stream:true}));  
 }
 
-const img = () => gulp.series(imgCompress, imgCopy);
+const img = gulp.series(imgCompress, imgCopy);
 export { img }
 
 // copy
@@ -127,33 +129,35 @@ export function copy() {
 
 // clean
 const clean = () => del([ 'dist' ]); // funktionierte bisher nicht
+export { clean }
 
 // server
 const server = () => browserSync.init({ proxy: proxy });
+export { server }
 
 // sftp
-function upload() {
-  return gulp.src( paths.upload.local, {since: gulp.lastRun('uplaod')})
-    .pipe(sftp({
-      host: paths.upload.host,
-      authFile: '.ftppass'
-    }));
+// export function upload() {
+//   return gulp.src(paths.upload.local, {since: gulp.lastRun('uplaod')})
+//     .pipe(sftp({
+//       host: paths.upload.host,
+//       authFile: '.ftppass'
+//     }));
+// }
+
+//watch
+export function watch() {
+    gulp.watch(paths.html.src, html);
+    gulp.watch(paths.styles.src, styles);
+    gulp.watch(paths.js.src, js);
+    gulp.watch(paths.images.src, img);
+    gulp.watch(paths.copy.src, copy);
 }
 
 //
 
-function run() {
-  if (watch) {
-    gulp.watch(paths.html.src, html);
-    gulp.watch(paths.styles.src, styles);
-    gulp.watch(paths.js.src, js);
-    gulp.watch(paths.img.src, img);
-    gulp.watch(paths.copy.src, copy);
-    done();
-  } else {
-    gulp.series(clean, gulp.parallel(html, js, styles, img, copy));
-    done();
-  }
-};
 
-export default { run };
+// const run = gulp.series(gulpIf(watch, watch, gulp.series(clean, gulp.parallel(html, js, styles, copy))))
+
+// export { watch };
+
+// export default run;
