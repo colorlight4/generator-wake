@@ -15,11 +15,10 @@ import del          from 'del';
 import autoprefixer from 'autoprefixer';
 import minimist     from 'minimist';
 
-// import [...]
+//
 
 var argv    = minimist(process.argv.slice(2));
 var prod    = argv.prod || argv.p;
-var watch   = argv.watch || argv.w;
 
 var reload  = browserSync.reload;
 var proxy   = 'https://q4u.de';
@@ -55,6 +54,7 @@ const paths = {
   }
 };
 
+//
 
 // html
 export function html() { 
@@ -92,8 +92,6 @@ export function js() {
     .pipe( reload({stream:true}));
 }
 
-
-
 // images
 function imgCompress() {
   return gulp.src(paths.images.src, {since: gulp.lastRun('img')})
@@ -128,7 +126,7 @@ export function copy() {
 }
 
 // clean
-const clean = () => del([ 'dist' ]); // funktionierte bisher nicht
+const clean = () => del([ 'dist' ]);
 export { clean }
 
 // server
@@ -136,15 +134,16 @@ const server = () => browserSync.init({ proxy: proxy });
 export { server }
 
 // sftp
-// export function upload() {
-//   return gulp.src(paths.upload.local, {since: gulp.lastRun('uplaod')})
-//     .pipe(sftp({
-//       host: paths.upload.host,
-//       authFile: '.ftppass'
-//     }));
-// }
+export function upload() {
+  return gulp.src(paths.upload.local, {since: gulp.lastRun('uplaod')})
+    .pipe(sftp({
+      host: paths.upload.host,
+      authFile: '.ftppass'
+    }));
+}
 
-//watch
+//
+
 export function watch() {
     gulp.watch(paths.html.src, html);
     gulp.watch(paths.styles.src, styles);
@@ -153,11 +152,6 @@ export function watch() {
     gulp.watch(paths.copy.src, copy);
 }
 
-//
+const run = gulp.series(clean, gulp.parallel(html, js, styles, copy));
 
-
-// const run = gulp.series(gulpIf(watch, watch, gulp.series(clean, gulp.parallel(html, js, styles, copy))))
-
-// export { watch };
-
-// export default run;
+export default run;
