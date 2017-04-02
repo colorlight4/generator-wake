@@ -28,14 +28,17 @@ const dist  = 'dist';
 const paths = {
   html: {
     src:  src  + '/html/*.html',
+    wtch: src  + '/html/**/*.html',
     dest: dist + '/'
   },
   js: {
     src:  src  + '/js/*.js',
+    wtch: src  + '/js/**/*.js',
     dest: dist + '/js/'  
   },
   styles: {
     src:  src  + '/scss/*.scss',
+    wtch: src  + '/scss/**/*.scss',
     dest: dist + '/css/'
   },
   images: {
@@ -145,11 +148,11 @@ export function upload() {
 //
 
 export function watch() {
-    gulp.watch(paths.html.src, html);
-    gulp.watch(paths.styles.src, styles);
-    gulp.watch(paths.js.src, js);
-    gulp.watch(paths.images.src, img);
-    gulp.watch(paths.copy.src, copy);
+  gulp.watch(paths.html.wtch, html);
+  gulp.watch(paths.styles.wtch, styles);
+  gulp.watch(paths.js.wtch, js);
+  gulp.watch(paths.images.src, img);
+  gulp.watch(paths.copy.src, copy);
 }
 
 const run = gulp.series(clean, gulp.parallel(html, js, styles, copy));
