@@ -1,9 +1,27 @@
+import browserSync  from 'browser-sync';
+import gulp         from 'gulp';
+import sass         from 'gulp-sass';
+import notify       from 'gulp-notify';
+import gulpIf       from 'gulp-if';
+import imagemin     from 'gulp-imagemin';
+import htmlmin      from 'gulp-htmlmin';
+import cleanCSS     from 'gulp-clean-css';
+import uglify       from 'gulp-uglify';
+import include      from 'gulp-include';
+import plumber      from 'gulp-plumber';
+import sftp         from 'gulp-sftp';
+import del          from 'del';
+import autoprefixer from 'autoprefixer';
+import minimist     from 'minimist';
+
 // import [...]
 
 var argv    = minimist(process.argv.slice(2));
-var prod    = argv.prod;
+var prod    = argv.prod || argv.p;
+var watch   = argv.watch || argv.w;
 
 var reload  = browserSync.reload;
+var proxy   = 'https://q4u.de';
 
 const src   = 'src';
 const dist  = 'dist';
@@ -22,12 +40,16 @@ const paths = {
   },
   images: {
     src:  src  + '/img/**/*',
-    orgn: src  + '/img_orgn/',
+    orgn: src  + '/imgOriginals/',
     dest: dist + '/img/'
   },
   copy: {
     src:  src  + '/copy/**/*',
     dest: dist + '/'
+  },
+  upload: {
+    local: dist + '/**/*',
+    host: 'web33.q4u.de'
   }
 };
 
@@ -68,13 +90,38 @@ export function js() {
     .pipe( reload({stream:true}));
 }
 
+
+
 // images
+function imgCompress() {
+  return gulp.src(paths.images.src, {since: gulp.lastRun('img')})
+    .pipe( plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
+    .pipe( gulp.dest(paths.images.orgn))
+    .pipe( imagemin({
+      optimizationLevel: 5,
+      progressive: true,
+      interlaced: true, 
+      svgoPlugins: [{cleanupIDs: false}]
+    }))
+    .pipe( notify('images compressed'))
+    .pipe( gulp.dest(paths.images.src))
+};
+
+function imgCopy () {
+  return gulp.src(paths.images.src)
+    .pipe( gulp.dest(paths.images.dest))
+    .pipe( notify('images copied'))
+    .pipe( reload({stream:true}));  
+}
+
+const img = () => gulp.series(imgCompress, imgCopy);
+export { img }
 
 // copy
 export function copy() {
   return gulp.src(paths.copy.src)
     .pipe( gulp.dest(paths.copy.dest))
-    .pipe( notify('other files copyed'))
+    .pipe( notify('other files copied'))
     .pipe( reload({stream:true}));
 }
 
@@ -82,11 +129,31 @@ export function copy() {
 const clean = () => del([ 'dist' ]); // funktionierte bisher nicht
 
 // server
-const server = () => browserSync.init({ proxy: "https://q4u.de" });
+const server = () => browserSync.init({ proxy: proxy });
 
 // sftp
+function upload() {
+  return gulp.src( paths.upload.local, {since: gulp.lastRun('uplaod')})
+    .pipe(sftp({
+      host: paths.upload.host,
+      authFile: '.ftppass'
+    }));
+}
 
 //
 
+function run() {
+  if (watch) {
+    gulp.watch(paths.html.src, html);
+    gulp.watch(paths.styles.src, styles);
+    gulp.watch(paths.js.src, js);
+    gulp.watch(paths.img.src, img);
+    gulp.watch(paths.copy.src, copy);
+    done();
+  } else {
+    gulp.series(clean, gulp.parallel(html, js, styles, img, copy));
+    done();
+  }
+};
 
-gulp.task('default', 'prod');
+export default { run };

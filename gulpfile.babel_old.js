@@ -7,7 +7,6 @@ import imagemin     from 'gulp-imagemin';
 import htmlmin      from 'gulp-htmlmin';
 import cleanCSS     from 'gulp-clean-css';
 import uglify       from 'gulp-uglify';
-import rename       from 'gulp-rename';
 import include      from 'gulp-include';
 import plumber      from 'gulp-plumber';
 import sftp         from 'gulp-sftp';
