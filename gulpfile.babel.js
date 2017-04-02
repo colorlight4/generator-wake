@@ -28,7 +28,7 @@ const dist  = 'dist';
 const paths = {
   html: {
     src:  src  + '/html/*.html',
-    dest: dist + '/html/'
+    dest: dist + '/'
   },
   js: {
     src:  src  + '/js/*.js',
