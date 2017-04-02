@@ -129,7 +129,7 @@ export function copy() {
 }
 
 // clean
-const clean = () => del([ 'dist' ]);
+const clean = () => del([ dist ]);
 export { clean }
 
 // server
